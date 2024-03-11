@@ -5,7 +5,14 @@ import { AiFillBug } from "react-icons/ai";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import {
+  Avatar,
+  Text,
+  Box,
+  Container,
+  DropdownMenu,
+  Flex,
+} from "@radix-ui/themes";
 
 const NavBar = () => {
   const links = [
@@ -29,9 +36,8 @@ const NavBar = () => {
                 <li
                   key={link.href}
                   className={classNames({
-                    "text-zinc-900": currentPath === link.href,
-                    "text-zinc-500": currentPath !== link.href,
-                    "hover:text-zinc-800 transition-colors": true,
+                    "nav-link": true,
+                    "!text-zinc-900": currentPath === link.href,
                   })}
                 >
                   <Link href={link.href}>{link.label}</Link>
@@ -41,10 +47,31 @@ const NavBar = () => {
           </Flex>
           <Box>
             {status === "authenticated" && (
-              <Link href="/api/auth/signout">Logout</Link>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Avatar
+                    src={session.user!.image!}
+                    fallback="?"
+                    size="2"
+                    radius="full"
+                    className="cursor-pointer"
+                  />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Label>
+                    <Text size="2">{session.user!.email}</Text>
+                  </DropdownMenu.Label>
+                  <DropdownMenu.Item>
+                    <Link href="/api/auth/signout">Logout</Link>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             )}
+
             {status === "unauthenticated" && (
-              <Link href="/api/auth/signin">Login</Link>
+              <Link className="nav-link" href="/api/auth/signin">
+                Login
+              </Link>
             )}
           </Box>
         </Flex>
