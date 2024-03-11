@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   Flex,
 } from "@radix-ui/themes";
+import { Skeleton } from "@/app/components";
 
 const NavBar = () => {
   const links = [
@@ -46,6 +47,8 @@ const NavBar = () => {
             </ul>
           </Flex>
           <Box>
+            {status === "loading" && <Skeleton width="3rem" />}
+
             {status === "authenticated" && (
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
