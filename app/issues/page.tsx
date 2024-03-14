@@ -1,13 +1,14 @@
 import { IssueStatusBadge, Link } from "@/app/components";
 import NextLink from "next/link";
 import prisma from "@/prisma/client";
-import { Table } from "@radix-ui/themes";
+import { Box, Flex, Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
+import Pagination from "../components/Pagination";
 
 interface Props {
-  searchParams: { status: Status; orderBy: keyof Issue };
+  searchParams: { status: Status; orderBy: keyof Issue; page: string };
 }
 
 const Issues = async ({ searchParams }: Props) => {
@@ -35,12 +36,18 @@ const Issues = async ({ searchParams }: Props) => {
     ? { [searchParams.orderBy]: "asc" }
     : undefined;
 
+  const where = { status, orderBy };
+
+  const page = parseInt(searchParams.page) || 1;
+  const pageSize = 10;
+
   const issues = await prisma.issue.findMany({
-    where: {
-      status,
-    },
-    orderBy,
+    where,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  const issueCount = await prisma.issue.count({ where });
 
   return (
     <div>
@@ -65,11 +72,6 @@ const Issues = async ({ searchParams }: Props) => {
                 </NextLink>
               </Table.ColumnHeaderCell>
             ))}
-            {/* <Table.ColumnHeaderCell>Issues</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created
-            </Table.ColumnHeaderCell> */}
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -91,6 +93,13 @@ const Issues = async ({ searchParams }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
+      <Box mt="2">
+        <Pagination
+          pageSize={pageSize}
+          currentPage={page}
+          totalCount={issueCount}
+        />
+      </Box>
     </div>
   );
 };
