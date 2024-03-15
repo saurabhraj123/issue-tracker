@@ -4,12 +4,17 @@ import prisma from "@/prisma/client";
 import { Box, Flex, Table } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
-import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import Pagination from "../components/Pagination";
 import { Metadata } from "next";
 
 interface Props {
-  searchParams: { status: Status; orderBy: keyof Issue; page: string };
+  searchParams: {
+    status: Status;
+    orderBy: keyof Issue;
+    page: string;
+    sortOrder: "asc" | "desc";
+  };
 }
 
 const Issues = async ({ searchParams }: Props) => {
@@ -34,16 +39,17 @@ const Issues = async ({ searchParams }: Props) => {
   const orderBy = columns
     .map((column) => column.value)
     .includes(searchParams.orderBy)
-    ? { [searchParams.orderBy]: "asc" }
+    ? { [searchParams.orderBy]: searchParams.sortOrder }
     : undefined;
 
-  const where = { status, orderBy };
+  const where = { status };
 
   const page = parseInt(searchParams.page) || 1;
   const pageSize = 10;
 
   const issues = await prisma.issue.findMany({
     where,
+    orderBy,
     skip: (page - 1) * pageSize,
     take: pageSize,
   });
@@ -64,10 +70,23 @@ const Issues = async ({ searchParams }: Props) => {
                 className={column.className}
               >
                 <NextLink
-                  href={{ query: { ...searchParams, orderBy: column.value } }}
+                  href={{
+                    query: {
+                      ...searchParams,
+                      orderBy: column.value,
+                      sortOrder:
+                        searchParams.sortOrder === "asc" ? "desc" : "asc",
+                    },
+                  }}
                 >
                   {column.value === searchParams.orderBy && (
-                    <ArrowUpIcon className="inline" />
+                    <>
+                      {orderBy && Object.values(orderBy)?.[0] === "asc" ? (
+                        <ArrowUpIcon className="inline" />
+                      ) : (
+                        <ArrowDownIcon className="inline" />
+                      )}
+                    </>
                   )}
                   {column.label}
                 </NextLink>
