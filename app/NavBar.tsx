@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { AiFillBug } from "react-icons/ai";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
@@ -65,7 +66,11 @@ const NavBar = () => {
                     <Text size="2">{session.user!.email}</Text>
                   </DropdownMenu.Label>
                   <DropdownMenu.Item>
-                    <Link href="/api/auth/signout">Logout</Link>
+                    <Text
+                      onClick={async () => await signOut({ callbackUrl: "/" })}
+                    >
+                      Logout
+                    </Text>
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>

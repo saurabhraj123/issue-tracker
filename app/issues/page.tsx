@@ -113,7 +113,7 @@ const Issues = async ({ searchParams }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
-      <Box mt="2">
+      <Box mt="4">
         <Pagination
           pageSize={pageSize}
           currentPage={page}
