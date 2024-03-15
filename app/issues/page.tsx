@@ -36,11 +36,11 @@ const Issues = async ({ searchParams }: Props) => {
     ? searchParams.status
     : undefined;
 
-  const orderBy = columns
+  const orderBy: { [x: string]: "asc" | "desc" } = columns
     .map((column) => column.value)
     .includes(searchParams.orderBy)
     ? { [searchParams.orderBy]: searchParams.sortOrder }
-    : undefined;
+    : { createdAt: "desc" };
 
   const where = { status };
 
