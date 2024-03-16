@@ -7,6 +7,7 @@ import { Container, Theme } from "@radix-ui/themes";
 import NavBar from "./NavBar";
 import AuthProvider from "./auth/Provider";
 import QueryClientProvider from "./QueryClientProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
               <NavBar />
               <main className="p-5">
                 <Container>{children}</Container>
+                <Analytics />
               </main>
             </QueryClientProvider>
           </Theme>
