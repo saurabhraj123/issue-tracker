@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { AiFillBug } from "react-icons/ai";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
@@ -77,9 +77,12 @@ const NavBar = () => {
             )}
 
             {status === "unauthenticated" && (
-              <Link className="nav-link" href="/api/auth/signin">
+              <Text
+                className="nav-link cursor-pointer"
+                onClick={async () => await signIn("google")}
+              >
                 Login
-              </Link>
+              </Text>
             )}
           </Box>
         </Flex>
