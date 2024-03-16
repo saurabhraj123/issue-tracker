@@ -4,6 +4,7 @@ import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
@@ -17,6 +18,8 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     staleTime: 60 * 1000,
   });
 
+  const router = useRouter();
+
   if (isLoading) return <Skeleton />;
 
   if (error) return null;
@@ -25,14 +28,15 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     <>
       <Select.Root
         defaultValue={issue.assignedToUserId || ""}
-        onValueChange={(userId) => {
-          axios
+        onValueChange={async (userId) => {
+          await axios
             .patch(`/api/issues/${issue.id}`, {
               assignedToUserId: userId || null,
             })
             .catch(() => {
               toast.error("Failed to update assignee");
             });
+          router.refresh();
         }}
       >
         <Select.Trigger />
