@@ -8,6 +8,7 @@ import NavBar from "./NavBar";
 import AuthProvider from "./auth/Provider";
 import QueryClientProvider from "./QueryClientProvider";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
               <main className="p-5">
                 <Container>{children}</Container>
                 <Analytics />
+                <SpeedInsights />
               </main>
             </QueryClientProvider>
           </Theme>
