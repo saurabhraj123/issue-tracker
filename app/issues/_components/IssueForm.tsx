@@ -1,9 +1,9 @@
 "use client";
 
 import { ErrorMessage, Spinner } from "@/app/components";
-import { Issue } from "@prisma/client";
 import { issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Issue } from "@prisma/client";
 import { Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
+import StatusSelect from "../[id]/StatusSelect";
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -58,6 +59,7 @@ const IssueForm = ({ issue }: Props) => {
         </Callout.Root>
       )}
       <form className="space-y-3" onSubmit={handleFormSubmit}>
+        {issue && <StatusSelect issue={issue} />}
         <TextField.Root>
           <TextField.Input
             defaultValue={issue?.title}
