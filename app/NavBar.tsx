@@ -65,12 +65,10 @@ const NavBar = () => {
                   <DropdownMenu.Label>
                     <Text size="2">{session.user!.email}</Text>
                   </DropdownMenu.Label>
-                  <DropdownMenu.Item>
-                    <Text
-                      onClick={async () => await signOut({ callbackUrl: "/" })}
-                    >
-                      Logout
-                    </Text>
+                  <DropdownMenu.Item
+                    onClick={async () => await signOut({ callbackUrl: "/" })}
+                  >
+                    <Text>Logout</Text>
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
